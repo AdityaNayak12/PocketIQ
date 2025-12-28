@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PocketIQ</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <div class="nav">
+        <h1>PocketIQ</h1>
+        <p>Spend smarter. Decide better.</p>
+    </div>
+
+    <div class="main-cont">
+        <div class="budget-section">
+            <label>Monthly Budget</label>
+            <input type="number" class="monthly-budget" placeholder="Enter budget">
+            <button class="set-budget">Set Budget</button>
+            <p class="budget-display"></p>
+            <p class = "remaining-display"></p>
+        </div>
+
+        <div class="expense-section">
+            <label>Expense Amount</label>
+            <input type="number" class="expense-amount" placeholder="Enter amount">
+
+            <label>Category</label>
+            <input type="text" class="expense-category" placeholder="Food, Travel, etc">
+
+            <button class="add-expense">Add Expense</button>
+        </div>
+
+        <div class="expense-list">
+            <h3>Expenses</h3>
+            <ul class="expenses"></ul>
+        </div>
+
+        <div class="daily-advice">
+            <h3>Today's Spending Advice</h3>
+            <p class="advice-text">Set a budget to get started.</p>
+        </div>
+
+        <div class="warnings">
+            <h3>Insights</h3>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p>PocketIQ © 2025</p>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
