@@ -30,26 +30,29 @@ function addExpenseToList() {
         const expense = document.querySelector(".expense-amount").value;
         const category = document.querySelector(".expense-category").value;
 
-        totalSpent+=Number(expense);
-        updateRemainingBudget();
         if (expense === "" || category === "") {
             alert("Please enter expense and category");
             return;
         }
 
-        if(expenseObject[category]){
-            expenseObject[category]+=Number(expense);
-        }else{
+        totalSpent += Number(expense);
+        updateRemainingBudget();
+
+        if (expenseObject[category]) {
+            expenseObject[category] += Number(expense);
+        } else {
             expenseObject[category] = Number(expense);
         }
-        console.log(expenseObject);
 
         const li = document.createElement("li");
         li.textContent = `₹${expense} - ${category}`;
-
         expenseList.appendChild(li);
+
+        updateDailyAdivice();
+        updateWarnings();    
     });
 }
+
 
 function updateRemainingBudget(){
     remainingBudget = monthlyBudget-totalSpent;
@@ -57,9 +60,114 @@ function updateRemainingBudget(){
 }
 
 function calucatingMostSpent(){
+    let maxCategory = null;
+    let maxAmount = 0;
+
+    for(let category in expenseObject){
+        if(expenseObject[category]>maxAmount){
+            maxAmount=expenseObject[category];
+            maxCategory = category;
+        }
+    }
+    return{
+        category: maxCategory,
+        amount: maxAmount
+    }   
+}
+
+function updateDailyAdivice(){
+
+    if (monthlyBudget <= 0) {
+        budgetAdvice.textContent = "Set a budget to get started.";
+        budgetAdvice.style.display = "block";
+        return;
+    }
+
+    const daysInMonth = daysInCurrentMonth();
+    const today = new Date().getDate();
+    const remainingDays = daysInMonth - today;
+
+    if (remainingDays <= 0) {
+        budgetAdvice.textContent = "Month is ending. Review your spending.";
+        return;
+    }
+
+    const idealDailyBudget = monthlyBudget / daysInMonth;
+    const perDayAllowed = remainingBudget / remainingDays;
+    const ratio = perDayAllowed / idealDailyBudget;
+
+    if (ratio >= 1.1) {
+        showGreen(perDayAllowed);
+    } else if (ratio >= 0.7) {
+        showYellow(perDayAllowed);
+    } else {
+        showRed(perDayAllowed);
+    }
+}
+
+function updateWarnings() {
+    const warningsBox = document.querySelector(".warnings");
+    warningsBox.innerHTML = "<h3>Insights</h3>";
+
+    const result = calucatingMostSpent();
+
+    if (!result || result.amount === 0) {
+        const p = document.createElement("p");
+        p.textContent = "No spending insights yet.";
+        warningsBox.appendChild(p);
+        return;
+    }
+
+    const highest = document.createElement("p");
+    highest.textContent =
+        `Highest spending category: ${result.category} (₹${result.amount})`;
+    warningsBox.appendChild(highest);
+
+    const percentage = (result.amount / totalSpent) * 100;
+
+    if (percentage > 40) {
+        const warning = document.createElement("p");
+        warning.style.color = "red";
+        warning.textContent =
+            `You're spending a lot on ${result.category}. Consider reducing expenses here.`;
+        warningsBox.appendChild(warning);
+    }
+}
+
+
+
+function showGreen(perDayAllowed) {
+    budgetAdvice.style.display = "block";
+    budgetAdvice.textContent =
+        `You're on track! You can safely spend around ₹${perDayAllowed.toFixed(0)} today.`;
     
+    document.querySelector(".daily-advice").style.borderLeftColor = "green";
+}
+
+
+function showYellow(perDayAllowed) {
+    budgetAdvice.style.display = "block";
+    budgetAdvice.textContent =
+        `You're doing okay, but spend cautiously today. Try to stay under ₹${perDayAllowed.toFixed(0)}.`;
+    
+    document.querySelector(".daily-advice").style.borderLeftColor = "orange";
+}
+
+
+function showRed(perDayAllowed) {
+    budgetAdvice.style.display = "block";
+    budgetAdvice.textContent =
+        `Warning! Your budget is tight. Avoid extra spending today. Limit: ₹${perDayAllowed.toFixed(0)}.`;
+    
+    document.querySelector(".daily-advice").style.borderLeftColor = "red";
+}
+
+function daysInCurrentMonth(){
+    const now = new Date();
+    return new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
 }
 
 setMonthlyBudget();
 addExpenseToList();
-
+updateDailyAdivice();
+updateWarnings();
