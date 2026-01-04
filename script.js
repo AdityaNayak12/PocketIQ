@@ -10,19 +10,20 @@ const expenseList = document.querySelector(".expenses");
 
 let monthlyBudget = 0;
 let totalSpent = 0;
+let expenseCount = 0;
 let remainingBudget = 0;
 const expenseObject = {};
 
 
 
-function setMonthlyBudget(){
-    setBudgetBtn.addEventListener("click", function(){
+function setMonthlyBudget() {
+    setBudgetBtn.addEventListener("click", function () {
         const value = Number(budgetInput.value);
         monthlyBudget = value;
         budgetDisplay.textContent = `Monthly Budget: ₹${monthlyBudget}`;
         budgetAdvice.style.display = "none";
-        
-    } )
+
+    })
 }
 
 function addExpenseToList() {
@@ -34,6 +35,7 @@ function addExpenseToList() {
             alert("Please enter expense and category");
             return;
         }
+        expenseCount++;
 
         totalSpent += Number(expense);
         updateRemainingBudget();
@@ -44,38 +46,48 @@ function addExpenseToList() {
             expenseObject[category] = Number(expense);
         }
 
-        const li = document.createElement("li");
-        li.textContent = `₹${expense} - ${category}`;
-        expenseList.appendChild(li);
+        let existingItem = expenseList.querySelector(
+            `li[data-category="${category}"]`
+        );
+
+        if (existingItem) {
+            existingItem.textContent =
+                `${category}: ₹${expenseObject[category]}`;
+        } else {
+            const li = document.createElement("li");
+            li.setAttribute("data-category", category);
+            li.textContent = `${category}: ₹${expenseObject[category]}`;
+            expenseList.appendChild(li);
+        }
 
         updateDailyAdivice();
-        updateWarnings();    
+        updateWarnings();
     });
 }
 
 
-function updateRemainingBudget(){
-    remainingBudget = monthlyBudget-totalSpent;
+function updateRemainingBudget() {
+    remainingBudget = monthlyBudget - totalSpent;
     remainingDisplay.textContent = `Remaining Budget: ₹${remainingBudget}`;
 }
 
-function calucatingMostSpent(){
+function calucatingMostSpent() {
     let maxCategory = null;
     let maxAmount = 0;
 
-    for(let category in expenseObject){
-        if(expenseObject[category]>maxAmount){
-            maxAmount=expenseObject[category];
+    for (let category in expenseObject) {
+        if (expenseObject[category] > maxAmount) {
+            maxAmount = expenseObject[category];
             maxCategory = category;
         }
     }
-    return{
+    return {
         category: maxCategory,
         amount: maxAmount
-    }   
+    }
 }
 
-function updateDailyAdivice(){
+function updateDailyAdivice() {
 
     if (monthlyBudget <= 0) {
         budgetAdvice.textContent = "Set a budget to get started.";
@@ -109,6 +121,12 @@ function updateWarnings() {
     const warningsBox = document.querySelector(".warnings");
     warningsBox.innerHTML = "<h3>Insights</h3>";
 
+    if (expenseCount < 3) {
+        const p = document.createElement("p");
+        p.textContent = "Add a few more expenses to see spending insights.";
+        warningsBox.appendChild(p);
+        return;
+    }
     const result = calucatingMostSpent();
 
     if (!result || result.amount === 0) {
@@ -140,7 +158,7 @@ function showGreen(perDayAllowed) {
     budgetAdvice.style.display = "block";
     budgetAdvice.textContent =
         `You're on track! You can safely spend around ₹${perDayAllowed.toFixed(0)} today.`;
-    
+
     document.querySelector(".daily-advice").style.borderLeftColor = "green";
 }
 
@@ -149,7 +167,7 @@ function showYellow(perDayAllowed) {
     budgetAdvice.style.display = "block";
     budgetAdvice.textContent =
         `You're doing okay, but spend cautiously today. Try to stay under ₹${perDayAllowed.toFixed(0)}.`;
-    
+
     document.querySelector(".daily-advice").style.borderLeftColor = "orange";
 }
 
@@ -158,13 +176,13 @@ function showRed(perDayAllowed) {
     budgetAdvice.style.display = "block";
     budgetAdvice.textContent =
         `Warning! Your budget is tight. Avoid extra spending today. Limit: ₹${perDayAllowed.toFixed(0)}.`;
-    
+
     document.querySelector(".daily-advice").style.borderLeftColor = "red";
 }
 
-function daysInCurrentMonth(){
+function daysInCurrentMonth() {
     const now = new Date();
-    return new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+    return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
 }
 
 setMonthlyBudget();
