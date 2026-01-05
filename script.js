@@ -4,6 +4,8 @@ const setBudgetBtn = document.querySelector(".set-budget");
 const budgetDisplay = document.querySelector(".budget-display");
 const remainingDisplay = document.querySelector(".remaining-display");
 const budgetAdvice = document.querySelector(".advice-text");
+const circularProgress = document.querySelector(".circular-progress");
+const progressText = document.querySelector(".progress-text");
 
 const addExpenseBtn = document.querySelector(".add-expense");
 const expenseList = document.querySelector(".expenses");
@@ -22,7 +24,7 @@ function setMonthlyBudget() {
         monthlyBudget = value;
         budgetDisplay.textContent = `Monthly Budget: ₹${monthlyBudget}`;
         budgetAdvice.style.display = "none";
-
+        updateProgressBar();
     })
 }
 
@@ -62,13 +64,42 @@ function addExpenseToList() {
 
         updateDailyAdivice();
         updateWarnings();
+        updateProgressBar();
     });
+}
+
+function updateProgressBar() {
+    if (monthlyBudget <= 0) return;
+
+    let percentUsed = (totalSpent / monthlyBudget) * 100;
+    percentUsed = Math.min(percentUsed, 100);
+
+    const degrees = (percentUsed / 100) * 360;
+
+    let color;
+    if (percentUsed < 60) {
+        color = "green"; 
+    } else if (percentUsed < 85) {
+        color = "orange"; 
+    } else {
+        color = "red"; 
+    }
+
+    if (percentUsed < 60) color = "#00e676";
+    else if (percentUsed < 85) color = "#ff9100";
+    else color = "#ff1744";
+
+    circularProgress.style.background = `conic-gradient(${color} ${degrees}deg, #2c2c2c 0deg)`;
+
+    progressText.textContent = `${percentUsed.toFixed(0)}%`;
 }
 
 
 function updateRemainingBudget() {
     remainingBudget = monthlyBudget - totalSpent;
-    remainingDisplay.textContent = `Remaining Budget: ₹${remainingBudget}`;
+    const remainingPercentage = (remainingBudget / monthlyBudget) * 100;
+    remainingDisplay.textContent = `Remaining Budget: ₹${remainingBudget}. You have used ${100 - remainingPercentage}% of monthly budget `;
+
 }
 
 function calucatingMostSpent() {
@@ -186,6 +217,7 @@ function daysInCurrentMonth() {
 }
 
 setMonthlyBudget();
+updateProgressBar();
 addExpenseToList();
 updateDailyAdivice();
 updateWarnings();

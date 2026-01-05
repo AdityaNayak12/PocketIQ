@@ -1,91 +1,227 @@
-/* RESET */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
-/* BODY */
 body {
-    background-color: #f5f7fb;
-    color: #333;
+    background-color: #121212;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* NAV */
 .nav {
-    background-color: #4f6cff;
-    color: white;
+    background: linear-gradient(135deg, #1f4037, #99f2c8);
+    background: #1f1f1f;
+    border-bottom: 1px solid #333;
     padding: 20px;
     text-align: center;
 }
 
-/* MAIN CONTAINER */
-.main-cont {
-    max-width: 800px;
-    margin: 30px auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.nav h1 {
+    background: linear-gradient(90deg, #4facfe, #00f2fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2rem;
+    margin-bottom: 5px;
 }
 
-/* SECTIONS */
+.nav p {
+    color: #888;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.main-cont {
+    max-width: 600px;
+    width: 90%;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+
 .budget-section,
 .expense-section,
 .expense-list,
 .daily-advice,
 .warnings {
-    background-color: white;
-    padding: 15px;
-    border-radius: 8px;
+    background-color: #1e1e1e;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    border: 1px solid #333;
+    transition: transform 0.2s ease;
 }
 
-/* HEADINGS */
-h3 {
-    margin-bottom: 10px;
+.budget-section:hover,
+.expense-section:hover {
+    transform: translateY(-2px);
 }
 
-/* INPUTS */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    color: #aaa;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 input {
     width: 100%;
-    padding: 8px;
-    margin: 6px 0 12px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    background-color: #2c2c2c;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-/* BUTTONS */
+input:focus {
+    border-color: #4facfe;
+    box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
+}
+
+
 button {
-    padding: 8px 12px;
-    background-color: #4f6cff;
-    color: white;
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, #4facfe, #00f2fe);
+    color: #000;
+    font-weight: 600;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 1rem;
+    transition: opacity 0.3s, transform 0.1s;
 }
 
 button:hover {
     opacity: 0.9;
+    transform: scale(0.98);
 }
 
-/* EXPENSE LIST */
-.expenses li {
-    margin-bottom: 6px;
+button:active {
+    transform: scale(0.95);
 }
 
-/* DAILY ADVICE */
-.daily-advice {
-    border-left: 5px solid #4f6cff;
+.ring-container {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
 }
 
-/* WARNINGS */
-.warnings {
-    border-left: 5px solid orange;
+.circular-progress {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: conic-gradient(#4facfe 0deg, #2c2c2c 0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    transition: background 0.1s ease;
 }
 
-/* FOOTER */
-.footer {
+.inner-circle {
+    width: 130px;
+    height: 130px;
+    background-color: #1e1e1e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+.progress-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
     text-align: center;
-    padding: 10px;
-    font-size: 14px;
-    color: #777;
+}
+
+
+.budget-display,
+.remaining-display {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-top: 10px;
+    color: #ddd;
+    font-weight: 500;
+}
+
+.remaining-display {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+
+
+
+.expense-list h3 {
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.expenses {
+    list-style: none;
+}
+
+.expenses li {
+    background-color: #252525;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 3px solid #4facfe;
+}
+
+
+.daily-advice,
+.warnings {
+    border-left-width: 5px;
+    border-left-style: solid;
+}
+
+.daily-advice {
+    border-left-color: #4facfe;
+}
+
+.warnings {
+    border-left-color: #ff9800;
+}
+
+.advice-text,
+.warnings p {
+    line-height: 1.5;
+    color: #ccc;
+}
+
+.footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 20px;
+    color: #555;
+    font-size: 0.8rem;
+    border-top: 1px solid #222;
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
 
 </head>
+
 <body>
     <div class="nav">
         <h1>PocketIQ</h1>
@@ -19,7 +21,14 @@
             <input type="number" class="monthly-budget" placeholder="Enter budget">
             <button class="set-budget">Set Budget</button>
             <p class="budget-display"></p>
-            <p class = "remaining-display"></p>
+            <p class="remaining-display"></p>
+            <div class="ring-container">
+                <div class="circular-progress">
+                    <div class="inner-circle">
+                        <p class="progress-text">0%</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="expense-section">
@@ -55,4 +64,5 @@
     <script src="script.js"></script>
 
 </body>
+
 </html>
