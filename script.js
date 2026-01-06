@@ -22,14 +22,29 @@ function setMonthlyBudget() {
     setBudgetBtn.addEventListener("click", function () {
         const value = Number(budgetInput.value);
         monthlyBudget = value;
+        if(monthlyBudget<=0){
+            alert("Please enter a valid budget")
+            return;
+        }
         budgetDisplay.textContent = `Monthly Budget: ₹${monthlyBudget}`;
         budgetAdvice.style.display = "none";
+        disableSetBudgetBtn();
         updateProgressBar();
     })
 }
 
+function disableSetBudgetBtn(){
+    setBudgetBtn.disabled = true;
+    setBudgetBtn.style.cursor = "not-allowed";
+    setBudgetBtn.textContent = "Budget Set";
+}
+
 function addExpenseToList() {
     addExpenseBtn.addEventListener("click", function () {
+        if(monthlyBudget == 0){
+            alert("Please set a monthly budget first");
+            return;
+        }
         const expense = document.querySelector(".expense-amount").value;
         const category = document.querySelector(".expense-category").value;
 
@@ -98,7 +113,7 @@ function updateProgressBar() {
 function updateRemainingBudget() {
     remainingBudget = monthlyBudget - totalSpent;
     const remainingPercentage = (remainingBudget / monthlyBudget) * 100;
-    remainingDisplay.textContent = `Remaining Budget: ₹${remainingBudget}. You have used ${100 - remainingPercentage}% of monthly budget `;
+    remainingDisplay.textContent = `Remaining Budget: ₹${remainingBudget}. You have used ${(100 - remainingPercentage).toFixed(2)}% of monthly budget `;
 
 }
 

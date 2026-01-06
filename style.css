@@ -15,7 +15,6 @@ body {
     flex-direction: column;
 }
 
-/* NAV */
 .nav {
     background: linear-gradient(135deg, #1f4037, #99f2c8);
     background: #1f1f1f;
