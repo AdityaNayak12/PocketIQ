@@ -1,16 +1,17 @@
 const budgetInput = document.querySelector(".monthly-budget");
 const budgetSection = document.querySelector(".budget-section");
 const setBudgetBtn = document.querySelector(".set-budget");
+const updateBudgetBtn = document.querySelector(".update-budget");
 const budgetDisplay = document.querySelector(".budget-display");
 const remainingDisplay = document.querySelector(".remaining-display");
 const budgetAdvice = document.querySelector(".advice-text");
 const circularProgress = document.querySelector(".circular-progress");
 const progressText = document.querySelector(".progress-text");
-
 const addExpenseBtn = document.querySelector(".add-expense");
 const expenseList = document.querySelector(".expenses");
 
 let monthlyBudget = 0;
+let isbudgetLocked = false;
 let totalSpent = 0;
 let expenseCount = 0;
 let remainingBudget = 0;
@@ -21,32 +22,47 @@ const expenseObject = {};
 function setMonthlyBudget() {
     setBudgetBtn.addEventListener("click", function () {
         const value = Number(budgetInput.value);
-        monthlyBudget = value;
-        if(monthlyBudget<=0){
+        if (value <= 0) {
             alert("Please enter a valid budget")
             return;
         }
+        monthlyBudget = value;
+        isbudgetLocked = true;
         budgetDisplay.textContent = `Monthly Budget: ₹${monthlyBudget}`;
         budgetAdvice.style.display = "none";
         disableSetBudgetBtn();
+        updateBudgetBtn.disabled = false;
         updateProgressBar();
     })
 }
 
-function disableSetBudgetBtn(){
+function disableSetBudgetBtn() {
     setBudgetBtn.disabled = true;
+    budgetInput.disabled = true;
     setBudgetBtn.style.cursor = "not-allowed";
     setBudgetBtn.textContent = "Budget Set";
 }
 
+function enableBudgetUpdate() {
+    updateBudgetBtn.addEventListener("click", function () {
+        isbudgetLocked = false;
+
+        budgetInput.disabled = false;
+        setBudgetBtn.disabled = false;
+
+        setBudgetBtn.textContent = "Confirm Update";
+        updateBudgetBtn.disabled = true;
+    });
+}
+
 function addExpenseToList() {
     addExpenseBtn.addEventListener("click", function () {
-        if(monthlyBudget == 0){
+        if (monthlyBudget == 0) {
             alert("Please set a monthly budget first");
             return;
         }
         const expense = document.querySelector(".expense-amount").value;
-        const category = document.querySelector(".expense-category").value;
+        const category = document.querySelector(".expense-category").value.trim().toLowerCase();
 
         if (expense === "" || category === "") {
             alert("Please enter expense and category");
@@ -93,11 +109,11 @@ function updateProgressBar() {
 
     let color;
     if (percentUsed < 60) {
-        color = "green"; 
+        color = "green";
     } else if (percentUsed < 85) {
-        color = "orange"; 
+        color = "orange";
     } else {
-        color = "red"; 
+        color = "red";
     }
 
     if (percentUsed < 60) color = "#00e676";
@@ -112,7 +128,7 @@ function updateProgressBar() {
 
 function updateRemainingBudget() {
     remainingBudget = monthlyBudget - totalSpent;
-    const remainingPercentage = (remainingBudget / monthlyBudget) * 100;
+    const remainingPercentage = Math.max(0,(remainingBudget / monthlyBudget) * 100);
     remainingDisplay.textContent = `Remaining Budget: ₹${remainingBudget}. You have used ${(100 - remainingPercentage).toFixed(2)}% of monthly budget `;
 
 }
@@ -232,7 +248,8 @@ function daysInCurrentMonth() {
 }
 
 setMonthlyBudget();
-updateProgressBar();
+enableBudgetUpdate();
 addExpenseToList();
 updateDailyAdivice();
 updateWarnings();
+updateProgressBar();
